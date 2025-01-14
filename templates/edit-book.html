@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book</title>
+</head>
+<body>
+    <h1>Edit Book</h1>
+    <form action="/edit-book/{{ .ID }}" method="post">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ .Title }}" required>
+        </div>
+        <div>
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" value="{{ .Author }}" required>
+        </div>
+        <div>
+            <label for="category_id">Genre:</label>
+            <select id="category_id" name="category_id" required>
+                <option value="">Select a genre</option>
+                {{ range .categories }}
+                    <option value="{{ .ID }}" {{ if eq .ID $.CategoryId }}selected{{ end }}>{{ .Name }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div>
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" value="{{ .Price }}" required>
+        </div>
+        <div>
+            <label for="published_date">Published Date:</label>
+            <input type="date" id="published_date" name="published_date" value="{{ .PublishedDate }}" required>
+        </div>
+        <div>
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" name="isbn" value="{{ .Isbn }}" required>
+        </div>
+        <div>
+            <label for="availability">Availability:</label>
+            <select name="availability">
+                <option value="1" {{ if .Availability }}selected{{ end }}>Available</option>
+                <option value="0" {{ if not .Availability }}selected{{ end }}>Not Available</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit">Update Book</button>
+        </div>
+    </form>
+</body>
+</html>

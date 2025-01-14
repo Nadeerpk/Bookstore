@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <h1>Book Categories</h1>
+    <ul>
+        {{ range .categories }}
+            <li>
+                {{ .Name }}
+            </li>
+        {{ end }}
+    </ul>
+    <form action="/add-category" method="POST">
+        <label for="name">Category Name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit" class="add-button">Add Category</button>
+    </form>
+</body>
+</html>

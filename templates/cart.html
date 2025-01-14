@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+</head>
+<body>
+    <h1>Your Cart</h1>
+    <div id="cart">
+        {{ if .cart.Books }}
+            <ul>
+                {{ range .cart.Books }}
+                    <li>
+                        <h2>{{ .Title }}</h2>
+                        <p>Author: {{ .Author }}</p>
+                        <p>Price: ${{ .Price }}</p>
+                        <a href="/remove-from-cart/{{ .ID }}">Remove from Cart</a>
+                        <a href="/order/{{ .ID }}">Place Order</a>
+
+                    </li>
+                {{ end }}
+            </ul>
+        {{ else }}
+            <p>Your cart is empty.</p>
+        {{ end }}
+    </div>
+</body>
+</html>

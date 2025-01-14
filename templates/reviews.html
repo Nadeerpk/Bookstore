@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reviews</title>
+</head>
+<body>
+    <h1>Book Reviews</h1>
+
+    <div id="reviews">
+        {{ range .reviews }}
+        <div class="review">
+            <p>{{ .Comment }}</p>
+            <p><strong>Reviewer:</strong> {{ .User.Name }}</p>
+        </div>
+        {{ end }}
+    </div>
+
+    <h2>Add a Review</h2>
+    <form action="/add-review/{{ .book_id }}" method="post">
+
+        <label for="comment">Review:</label>
+        <textarea id="comment" name="comment" rows="4" required></textarea><br><br>
+
+        <input type="submit" value="Submit Review">
+    </form>
+</body>
+</html>
