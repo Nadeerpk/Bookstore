@@ -6,25 +6,22 @@ import (
 	"strings"
 
 	"html/template"
-
-	"gorm.io/gorm"
 )
 
 type Book struct {
-	gorm.Model
-	ID            uint     `json:"id" form:"id" gorm:"primary_key"`
-	Title         string   `json:"title" form:"title" binding:"required" gorm:"not null"`
-	Author        string   `json:"author" form:"author" binding:"required" gorm:"not null"`
-	Price         float64  `json:"price" form:"price" binding:"required" gorm:"not null"`
-	Category      Category `gorm:"foreignKey:CategoryID"`
-	Isbn          string   `json:"isbn" form:"isbn" binding:"required" gorm:"not null; unique"`
-	PublishedDate string   `json:"published_date" form:"published_date" binding:"required" gorm:"not null"`
-	Availability  bool     `json:"availability" form:"availability" binding:"required" gorm:"not null"`
-	Carts         []*Cart  `json:"carts" form:"carts" gorm:"many2many:cart_items"`
-	CategoryID    uint     `json:"category_id" form:"category_id"`
-	Reviews       []Review `json:"reviews" form:"reviews" gorm:"foreignKey:BookID"`
-	Orders        []Order  `json:"orders" form:"orders" gorm:"foreignKey:BookID"`
-	Image         []byte   `json:"image" form:"image" gorm:"type:mediumblob"`
+	ID            uint       `json:"id" form:"id" gorm:"primary_key"`
+	Title         string     `json:"title" form:"title" binding:"required" gorm:"not null"`
+	Author        string     `json:"author" form:"author" binding:"required" gorm:"not null"`
+	Price         float64    `json:"price" form:"price" binding:"required" gorm:"not null"`
+	Category      Category   `gorm:"foreignKey:CategoryID"`
+	Isbn          string     `json:"isbn" form:"isbn" binding:"required" gorm:"not null; unique"`
+	PublishedDate string     `json:"published_date" form:"published_date" binding:"required" gorm:"not null"`
+	Availability  bool       `json:"availability" form:"availability" binding:"required" gorm:"not null"`
+	CategoryID    uint       `json:"category_id" form:"category_id"`
+	CartItems     []CartItem `gorm:"foreignKey:BookID"`
+	Reviews       []Review   `json:"reviews" form:"reviews" gorm:"foreignKey:BookID"`
+	Orders        []Order    `json:"orders" form:"orders" gorm:"foreignKey:BookID"`
+	Image         []byte     `json:"image" form:"image" gorm:"type:mediumblob"`
 }
 
 func (b *Book) GetImageBase64() template.URL {
@@ -73,6 +70,9 @@ func (book *Book) UpdateBook() error {
 func (book *Book) DeleteBook() error {
 	err := db.Delete(&book)
 	return err.Error
+}
+func DeleteBookIsbn(isbn string) {
+	db.Where("isbn = ?", isbn).Delete(&Book{})
 }
 
 func SearchBooks(title, author, genre, isbn, availability, yearFrom, yearTo,

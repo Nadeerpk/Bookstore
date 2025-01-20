@@ -2,34 +2,29 @@ package models
 
 import (
 	"bookstore/src/config"
-
-	"gorm.io/gorm"
 )
 
 type Cart struct {
-	gorm.Model
-	ID     uint    `json:"id" form:"id" gorm:"primary_key"`
-	UserID uint    `json:"user_id" form:"user_id"`
-	User   User    `json:"user" form:"user" gorm:"foreignKey:UserID"`
-	Books  []*Book `json:"books" form:"books" gorm:"many2many:cart_items;constraint:OnDelete:CASCADE"`
+	ID     uint       `json:"id" form:"id" gorm:"primary_key"`
+	UserID uint       `json:"user_id" form:"user_id"`
+	Items  []CartItem `gorm:"foreignKey:CartID;constraint:OnDelete:CASCADE"`
 }
+
 type CartItem struct {
-	gorm.Model
-	CartID   uint `json:"cart_id" form:"cart_id" gorm:"primary_key"`
-	BookID   uint `json:"book_id" form:"book_id" gorm:"primary_key"`
+	CartID   uint `json:"cart_id" form:"cart_id" gorm:"not null"`
+	BookID   uint `json:"book_id" form:"book_id" gorm:"not null"`
 	Quantity uint `json:"quantity" form:"quantity" gorm:"default:1"`
+	Book     Book `json:"book" gorm:"foreignKey:BookID"`
 }
 
 func init() {
 	db = config.Getdb()
-	db.AutoMigrate(&Cart{}, &CartItem{})
+	// db.Migrator().DropTable(&CartItem{}, &Cart{})
+	db.AutoMigrate(&CartItem{}, &Cart{})
 }
 
 func GetCart(cart *Cart, userID uint) error {
-	err := db.Preload("Books", func(db *gorm.DB) *gorm.DB {
-		return db.Joins("JOIN cart_items ON cart_items.book_id = books.id AND cart_items.deleted_at IS NULL")
-	}).Where("user_id = ?", userID).
-		First(cart).Error
+	err := db.Preload("Items.Book").Where("user_id = ?", userID).First(cart).Error
 	return err
 }
 

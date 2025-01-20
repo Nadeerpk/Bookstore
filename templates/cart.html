@@ -8,16 +8,16 @@
 <body>
     <h1>Your Cart</h1>
     <div id="cart">
-        {{ if .cart.Books }}
+        {{ if .cart.Items }}
             <ul>
-                {{ range .cart.Books }}
+                {{ range .cart.Items }}
                     <li>
-                        <h2>{{ .Title }}</h2>
-                        <p>Author: {{ .Author }}</p>
-                        <p>Price: ${{ .Price }}</p>
-                        <a href="/remove-from-cart/{{ .ID }}">Remove from Cart</a>
-                        <a href="/order/{{ .ID }}">Place Order</a>
-
+                        <h2>{{ .Book.Title }}</h2>
+                        <p>Author: {{ .Book.Author }}</p>
+                        <p>Price: ${{ .Book.Price }}</p>
+                        <p>Quantity: {{ .Quantity }}</p>
+                        <a href="/remove-from-cart/{{ .Book.ID }}">Remove from Cart</a>
+                        <a href="/order/{{ .Book.ID }}">Place Order</a>
                     </li>
                 {{ end }}
             </ul>
