@@ -11,7 +11,6 @@ import (
 var db *gorm.DB
 
 type User struct {
-	gorm.Model
 	ID       uint     `json:"id" form:"id" gorm:"primary_key"`
 	Name     string   `json:"username" form:"name" binding:"required" gorm:"not null"`
 	Password string   `json:"password" form:"password" binding:"required" gorm:"not null"`
@@ -26,9 +25,9 @@ func init() {
 	db.AutoMigrate(&User{})
 }
 
-func (u *User) CreateUser() *User {
-	db.Create(&u)
-	return u
+func (u *User) CreateUser() error {
+	result := db.Create(&u)
+	return result.Error
 }
 
 func AuthenticateUser(RequestUser *User) bool {
@@ -47,4 +46,15 @@ func GetUser(user *User, RequestUser *User) {
 
 func GetUserByID(user *User, user_id uint) {
 	db.Find(&user, user_id)
+}
+func DeleteUserByName(name string) error {
+	var user User
+	if err := db.Where("name = ?", name).First(&user).Error; err != nil {
+		return err
+	}
+	result := db.Where("name = ?", name).Delete(&User{})
+	return result.Error
+}
+func GetUserByEmail(email string, user *User) {
+	db.Where("email = ?", email).Find(user)
 }
