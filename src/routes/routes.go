@@ -36,6 +36,7 @@ func SetupRoutes(router *gin.Engine) {
 	userGroup.GET("/reviews/:book_id", controllers.GetReviews)
 	userGroup.GET("/order/:book_id", controllers.AddOrderController)
 	userGroup.GET("/remove-from-cart/:book_id", controllers.RemoveFromCartController)
+	userGroup.GET("/order-history", controllers.OrderHistoryController)
 	adminGroup := userGroup.Group("/", adminHandler())
 	adminGroup.POST("/add-book", controllers.AddBookController)
 	adminGroup.GET("/add-book", func(ctx *gin.Context) {

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <a href="/books">Books List</a>
+    <a href="/logout">Logout</a>
+    <h1>Orders</h1>
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Book Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Order Date</th>
+        </tr>
+        {{ range $index, $order := .orders }}
+            <tr>
+                <td>{{ $index }}</td>
+                <td>{{ $order.Book.Title }}</td>
+                <td>{{ $order.Book.Author }}</td>
+                <td>${{ $order.Book.Price }}</td>
+                <td>{{ $order.CreatedAt }}</td>
+            </tr>
+        {{ end }}
+    </table>
+</html>

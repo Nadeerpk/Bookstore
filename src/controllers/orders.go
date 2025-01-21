@@ -19,3 +19,10 @@ func AddOrderController(c *gin.Context) {
 	models.DeleteFromCart(uint(book_id), uint(user_id))
 	c.Redirect(http.StatusFound, "/cart")
 }
+
+func OrderHistoryController(c *gin.Context) {
+	user_id := c.GetFloat64("user_id")
+	var orders []models.Order
+	models.GetOrdersByUserID(uint(user_id), &orders)
+	c.HTML(200, "orders.html", gin.H{"orders": orders})
+}

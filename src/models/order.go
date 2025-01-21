@@ -30,3 +30,8 @@ func AddOrder(order *Order) {
 	to := []string{order.User.Email}
 	utils.Send_mail(to, subject, body)
 }
+
+func GetOrdersByUserID(userID uint, orders *[]Order) error {
+	err := db.Preload("Book").Where("user_id = ?", userID).Find(&orders).Error
+	return err
+}
