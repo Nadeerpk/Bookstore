@@ -6,6 +6,7 @@ import (
 	"bookstore/src/routes"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,7 @@ func TestOrderController(t *testing.T) {
 	routes.SetupRoutes(router)
 	user := &models.User{
 		Name:     "testuser",
-		Email:    "test@example.com",
+		Email:    "nadeer@qburst.com",
 		Password: "password123",
 		Role:     "user",
 	}
@@ -34,7 +35,14 @@ func TestOrderController(t *testing.T) {
 	user.ID = createdUser.ID
 	t.Cleanup(func() {
 		models.DeleteUserByName(user.Name)
+		models.DeleteBookIsbn("123456789")
 	})
+	book := &models.Book{Title: "Test Book 1", Author: "Author 1", Price: 29.99, Isbn: "123456789",
+		PublishedDate: "01-01-2000", CategoryID: models.GetCategories()[0].ID}
+	book.CreateBook()
+	var createdBook models.Book
+	models.GetBookByIsbn(book.Isbn, &createdBook)
+	book_id_str := strconv.FormatUint(uint64(createdBook.ID), 10)
 	tests := []struct {
 		name       string
 		setupAuth  func(*http.Request)
@@ -59,10 +67,12 @@ func TestOrderController(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			w := httptest.NewRecorder()
 			var cart models.Cart
-			models.AddToCart(uint(1), uint(user.ID), cart)
-			req, _ := http.NewRequest("GET", "/order/1", nil)
+			models.AddToCart(uint(createdBook.ID), uint(user.ID), cart)
+			req, _ := http.NewRequest("GET", "/order/"+book_id_str, nil)
+			test.setupAuth(req)
 			router.ServeHTTP(w, req)
 			assert.Equal(t, http.StatusFound, w.Code)
+			assert.Equal(t, w.Header().Get("location"), "/cart")
 		})
 	}
 }

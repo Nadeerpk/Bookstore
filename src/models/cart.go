@@ -19,7 +19,6 @@ type CartItem struct {
 
 func init() {
 	db = config.Getdb()
-	// db.Migrator().DropTable(&CartItem{}, &Cart{})
 	db.AutoMigrate(&CartItem{}, &Cart{})
 }
 

@@ -40,5 +40,6 @@ func TestLoginController(t *testing.T) {
 		req.Header.Set("Content-Type", "application/json")
 		router.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusFound, w.Code)
+		assert.Equal(t, w.Header().Get("location"), "/books")
 	})
 }

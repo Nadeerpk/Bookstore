@@ -18,9 +18,9 @@ type Book struct {
 	PublishedDate string     `json:"published_date" form:"published_date" binding:"required" gorm:"not null"`
 	Availability  bool       `json:"availability" form:"availability" binding:"required" gorm:"not null"`
 	CategoryID    uint       `json:"category_id" form:"category_id"`
-	CartItems     []CartItem `gorm:"foreignKey:BookID"`
-	Reviews       []Review   `json:"reviews" form:"reviews" gorm:"foreignKey:BookID"`
-	Orders        []Order    `json:"orders" form:"orders" gorm:"foreignKey:BookID"`
+	CartItems     []CartItem `gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+	Reviews       []Review   `json:"reviews" form:"reviews" gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
+	Orders        []Order    `json:"orders" form:"orders" gorm:"foreignKey:BookID;constraint:OnDelete:CASCADE"`
 	Image         []byte     `json:"image" form:"image" gorm:"type:mediumblob"`
 }
 
@@ -44,6 +44,9 @@ func GetAllBooks(books *[]Book) error {
 func GetBookByID(id string, book *Book) error {
 	err := db.Preload("Category").Where("id = ?", id).First(&book).Error
 	return err
+}
+func GetBookByIsbn(isbn string, book *Book) {
+	db.Where("isbn = ?", isbn).First(&book)
 }
 
 func (book *Book) CreateBook() *Book {
