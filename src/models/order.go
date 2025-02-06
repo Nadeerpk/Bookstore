@@ -21,14 +21,18 @@ func init() {
 	db.AutoMigrate(&Order{})
 }
 
-func AddOrder(order *Order) {
+func AddOrder(order *Order) error {
 	db.Create(&order)
 	db.Model(&order).Preload("User").Preload("Book").First(&order)
 
 	subject := "Subject: Your Order Has Been Placed!\n"
 	body := "Your order from the Bookstore for " + order.Book.Title + " has been placed successfully.\n"
 	to := []string{order.User.Email}
-	utils.Send_mail(to, subject, body)
+	err := utils.Send_mail(to, subject, body)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func GetOrdersByUserID(userID uint, orders *[]Order) error {

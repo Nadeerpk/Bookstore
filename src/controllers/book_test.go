@@ -6,7 +6,6 @@ import (
 	"bookstore/src/routes"
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -76,7 +75,6 @@ func TestBookController(t *testing.T) {
 			req, _ := http.NewRequest("POST", "/add-book", bytes.NewBuffer(jsonValue))
 			req.Header.Set("Content-Type", "application/json")
 			test.setupAuth(req)
-			fmt.Println(req.Cookies())
 			router.ServeHTTP(w, req)
 			assert.Equal(t, http.StatusFound, w.Code)
 			assert.Equal(t, w.Header().Get("location"), "/books")

@@ -15,7 +15,11 @@ func AddOrderController(c *gin.Context) {
 	order := &models.Order{}
 	order.UserID = uint(user_id)
 	order.BookID = uint(book_id)
-	models.AddOrder(order)
+	err := models.AddOrder(order)
+	if err != nil {
+		c.Redirect(http.StatusFound, "/cart")
+		return
+	}
 	models.DeleteFromCart(uint(book_id), uint(user_id))
 	c.Redirect(http.StatusFound, "/cart")
 }

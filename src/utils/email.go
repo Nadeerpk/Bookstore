@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func Send_mail(receipients []string, subject string, body string) {
+func Send_mail(receipients []string, subject string, body string) error {
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
 	senderEmail := "nadeer@qburst.com"
@@ -17,6 +17,8 @@ func Send_mail(receipients []string, subject string, body string) {
 	auth := smtp.PlainAuth("", senderEmail, password, smtpHost)
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, senderEmail, receipients, message)
 	if err != nil {
-		log.Fatalf("Failed to send email: %v", err)
+		log.Printf("Failed to send email: %v", err)
+		return err
 	}
+	return nil
 }

@@ -34,7 +34,7 @@ func AddToCart(bookID, user_id uint, cart Cart) error {
 		return err
 	}
 
-	if err := db.Where("user_id = ?", user_id).First(&cart).Error; err != nil {
+	if err := db.Where("user_id = ?", user_id).Find(&cart); err != nil {
 		cart = Cart{UserID: user_id}
 		db.Create(&cart)
 		cartitem := CartItem{CartID: cart.ID, BookID: bookID}

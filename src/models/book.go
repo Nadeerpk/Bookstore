@@ -67,6 +67,7 @@ func (book *Book) UpdateBook() error {
 		PublishedDate: book.PublishedDate,
 		Availability:  book.Availability,
 		CategoryID:    book.CategoryID,
+		Image:         book.Image,
 	}).Error
 }
 

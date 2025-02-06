@@ -12,26 +12,7 @@ func AddBookController(c *gin.Context) {
 	Book := &models.Book{}
 	c.ShouldBind(Book)
 
-	file, err := c.FormFile("image")
-	if err != nil {
-		fmt.Printf("Error getting file: %v\n", err)
-	} else {
-		src, err := file.Open()
-		if err != nil {
-			fmt.Printf("Error opening file: %v\n", err)
-		} else {
-			defer src.Close()
-
-			imageBytes := make([]byte, file.Size)
-			n, err := src.Read(imageBytes)
-			if err != nil {
-				fmt.Printf("Error reading file: %v\n", err)
-			} else {
-				fmt.Printf("Read %d bytes from image\n", n)
-				Book.Image = imageBytes
-			}
-		}
-	}
+	AttachImage(c, Book)
 
 	Book.CreateBook()
 	c.Redirect(http.StatusFound, "/books")
@@ -40,6 +21,7 @@ func AddBookController(c *gin.Context) {
 func UpdateBookController(c *gin.Context) {
 	Book := &models.Book{}
 	c.ShouldBind(Book)
+	AttachImage(c, Book)
 	fmt.Println(Book)
 	_ = Book.UpdateBook()
 	c.HTML(http.StatusOK, "books.html", gin.H{})
@@ -94,4 +76,27 @@ func BookSearchController(c *gin.Context) {
 	c.HTML(http.StatusOK, "books.html", gin.H{
 		"books": books,
 	})
+}
+
+func AttachImage(c *gin.Context, Book *models.Book) {
+	file, err := c.FormFile("image")
+	if err != nil {
+		fmt.Printf("Error getting file: %v\n", err)
+	} else {
+		src, err := file.Open()
+		if err != nil {
+			fmt.Printf("Error opening file: %v\n", err)
+		} else {
+			defer src.Close()
+
+			imageBytes := make([]byte, file.Size)
+			n, err := src.Read(imageBytes)
+			if err != nil {
+				fmt.Printf("Error reading file: %v\n", err)
+			} else {
+				fmt.Printf("Read %d bytes from image\n", n)
+				Book.Image = imageBytes
+			}
+		}
+	}
 }
