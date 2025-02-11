@@ -9,8 +9,8 @@ import (
 func Send_mail(receipients []string, subject string, body string) error {
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
-	senderEmail := "nadeer@qburst.com"
-	password := os.Getenv("app_password")
+	senderEmail := os.Getenv("sender_email")
+	password := os.Getenv("app.password")
 
 	message := []byte(subject + "\n" + body)
 
