@@ -51,6 +51,9 @@ func SetupRoutes(db *gorm.DB, userHandler *handlers.UserHandler, bookHandler *ha
 	adminGroup.POST("/edit-book/:id", bookHandler.UpdateBook)
 	adminGroup.POST("/delete-book/:id", bookHandler.DeleteBook)
 	adminGroup.POST("/add-category", categoryHandler.AddCategory)
+	router.Use(gin.CustomRecovery(func(c *gin.Context, recovered interface{}) {
+		c.HTML(http.StatusInternalServerError, "500.html", gin.H{})
+	}))
 	return router
 }
 
