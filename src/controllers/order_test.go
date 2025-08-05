@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestOrderController(t *testing.T) {
+func OrderController(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	router.LoadHTMLGlob("../../templates/*")

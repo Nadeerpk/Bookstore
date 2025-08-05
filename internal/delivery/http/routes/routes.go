@@ -3,6 +3,7 @@ package routes
 import (
 	"bookstore/internal/delivery/http/handlers"
 	"bookstore/src/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,7 @@ func SetupRoutes(db *gorm.DB, userHandler *handlers.UserHandler, bookHandler *ha
 	})
 	router.POST("/register", userHandler.RegisterUser)
 	router.POST("/login", userHandler.LoginUser)
-	userGroup := router.Group("/", jwtHandler())
+	userGroup := router.Group("/", JwtHandler())
 	userGroup.GET("/logout", userHandler.LogoutUser)
 	userGroup.GET("/books", bookHandler.ListBooks)
 	userGroup.GET("/book-search", bookHandler.BookSearch)
@@ -57,20 +58,23 @@ func SetupRoutes(db *gorm.DB, userHandler *handlers.UserHandler, bookHandler *ha
 	return router
 }
 
-func jwtHandler() gin.HandlerFunc {
+func JwtHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString, err := c.Cookie("jwt_token")
 		if err != nil {
+			fmt.Println("line 65")
 			c.Redirect(http.StatusFound, "/login")
 			c.Abort()
 			return
 		}
 		claims := jwt.MapClaims{}
+		fmt.Println(claims, tokenString)
 		token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
 			return jwtKey, nil
 		})
 
 		if err != nil || !token.Valid {
+			fmt.Println("line 76", err, token)
 			c.Redirect(http.StatusFound, "/login")
 			c.Abort()
 			return
@@ -87,6 +91,7 @@ func adminHandler() gin.HandlerFunc {
 		var user models.User
 		models.GetUserByID(&user, uint(user_id))
 		if user.Role != "admin" {
+			fmt.Println("line 93")
 			c.Redirect(http.StatusFound, "/login")
 			c.Abort()
 			return

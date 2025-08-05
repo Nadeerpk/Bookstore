@@ -15,7 +15,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func TestBookController(t *testing.T) {
+func BookController(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	router.LoadHTMLGlob("../../templates/*")

@@ -4,7 +4,9 @@ import (
 	"bookstore/internal/domain/models"
 	"bookstore/internal/usecase"
 	"fmt"
+	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,8 +28,13 @@ func NewBookHandler(bookUseCase usecase.BookUseCase, userUseCase usecase.UserUse
 
 func (h *BookHandler) EditBook(c *gin.Context) {
 	id := c.Param("id")
+	val, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		log.Fatalf("Error converting string to uint: %v", err)
+	}
+	uint_id := uint(val)
 	var book models.Book
-	if err := h.BookUsecase.GetBookByID(id, &book); err != nil {
+	if err := h.BookUsecase.GetBookByID(uint_id, &book); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching book details"})
 		return
 	}
@@ -92,8 +99,13 @@ func (h *BookHandler) ListBooks(c *gin.Context) {
 
 func (h *BookHandler) DeleteBook(c *gin.Context) {
 	id := c.Param("id")
+	val, err := strconv.ParseUint(id, 10, 64)
+	if err != nil {
+		log.Fatalf("Error converting string to uint: %v", err)
+	}
+	uint_id := uint(val)
 	var book models.Book
-	if err := h.BookUsecase.GetBookByID(id, &book); err != nil {
+	if err := h.BookUsecase.GetBookByID(uint_id, &book); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching book details"})
 		return
 	}

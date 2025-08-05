@@ -19,7 +19,7 @@ func (r *bookRepository) GetAllBooks(books *[]models.Book) error {
 	return err.Error
 }
 
-func (r *bookRepository) GetBookByID(id string, book *models.Book) error {
+func (r *bookRepository) GetBookByID(id uint, book *models.Book) error {
 	err := r.db.Preload("Category").Where("id = ?", id).First(&book).Error
 	return err
 }

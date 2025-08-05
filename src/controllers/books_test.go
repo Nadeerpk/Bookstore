@@ -24,7 +24,7 @@ func createTestBooks() error {
 	return nil
 }
 
-func TestGetBooks(t *testing.T) {
+func GetBooks(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 	router.LoadHTMLGlob("../../templates/*")

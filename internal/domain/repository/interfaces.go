@@ -14,7 +14,7 @@ type UserRepository interface {
 }
 type BookRepository interface {
 	GetAllBooks(books *[]models.Book) error
-	GetBookByID(id string, book *models.Book) error
+	GetBookByID(id uint, book *models.Book) error
 	CreateBook(book *models.Book) *models.Book
 	UpdateBook(book *models.Book) error
 	DeleteBook(book *models.Book) error

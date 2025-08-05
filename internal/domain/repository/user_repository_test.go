@@ -2,7 +2,7 @@ package repository_test
 
 import (
 	"bookstore/internal/domain/models"
-	"bookstore/internal/repository"
+	"bookstore/internal/domain/repository"
 	"fmt"
 	"testing"
 

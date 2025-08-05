@@ -14,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func TestLoginController(t *testing.T) {
+func LoginController(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.Default()
 

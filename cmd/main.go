@@ -3,7 +3,7 @@ package main
 import (
 	"bookstore/internal/delivery/http/handlers"
 	"bookstore/internal/delivery/http/routes"
-	"bookstore/internal/repository"
+	"bookstore/internal/domain/repository"
 	"bookstore/internal/usecase"
 	"bookstore/src/models"
 	"fmt"

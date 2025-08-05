@@ -2,7 +2,7 @@ package usecase
 
 import (
 	"bookstore/internal/domain/models"
-	"bookstore/internal/repository"
+	"bookstore/internal/domain/repository"
 )
 
 type CartUseCase interface {

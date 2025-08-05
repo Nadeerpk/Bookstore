@@ -1,8 +1,8 @@
-package controllers_test
+package handlers_test
 
 import (
-	"bookstore/src/controllers"
-	"bookstore/src/models"
+	"bookstore/internal/delivery/http/handlers"
+	"bookstore/internal/domain/models"
 	"bytes"
 	"encoding/json"
 	"net/http"
@@ -11,10 +11,21 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
-func Register(t *testing.T) {
+type MockUserUsecase struct {
+	mock.Mock
+}
+
+func (m *MockUserUsecase) CreateUser(user *models.User) error {
+	args := m.Called(user)
+	return args.Error(0)
+}
+func TestRegister(t *testing.T) {
 	gin.SetMode(gin.TestMode)
+	mockUserUsecase := new(MockUserUsecase)
+	userHandler := handlers.NewUserHandler(mockUserUsecase)
 
 	tests := []struct {
 		name       string
@@ -56,15 +67,17 @@ func Register(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			router := gin.New()
-			router.LoadHTMLGlob("../../templates/*")
-			if tt.statusCode == http.StatusOK {
-				t.Cleanup(func() {
-					models.DeleteUserByName(tt.user.Name)
-				})
-			}
-			router.POST("/register", controllers.RegisterController)
+			router.LoadHTMLGlob("../../../../templates/*")
+			// if tt.statusCode == http.StatusOK {
+			// 	t.Cleanup(func() {
+			// 		models.DeleteUserByName(tt.user.Name)
+			// 	})
+			// }
+			router.POST("/register", userHandler.RegisterUser)
 
 			jsonValue, _ := json.Marshal(tt.user)
+			// Change this line to use pointer
+			mockUserUsecase.On("CreateUser", mock.AnythingOfType("*models.User")).Return(nil)
 			req, _ := http.NewRequest("POST", "/register", bytes.NewBuffer(jsonValue))
 			req.Header.Set("Content-Type", "application/json")
 
@@ -72,6 +85,7 @@ func Register(t *testing.T) {
 
 			router.ServeHTTP(w, req)
 			assert.Equal(t, tt.statusCode, w.Code)
+			mockUserUsecase.AssertExpectations(t)
 		})
 	}
 }
