@@ -3,27 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
+    <title>Cart - Bookstore</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>Your Cart</h1>
-    <div id="cart">
-        {{ if .cart.Items }}
-            <ul>
-                {{ range .cart.Items }}
-                    <li>
-                        <h2>{{ .Book.Title }}</h2>
-                        <p>Author: {{ .Book.Author }}</p>
-                        <p>Price: ${{ .Book.Price }}</p>
-                        <p>Quantity: {{ .Quantity }}</p>
-                        <a href="/remove-from-cart/{{ .Book.ID }}">Remove from Cart</a>
-                        <a href="/order/{{ .Book.ID }}">Place Order</a>
-                    </li>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="nav-brand">📚 Bookstore</a>
+                <div class="nav-links">
+                    <a href="/books" class="nav-link">📖 Books</a>
+                    <a href="/order-history" class="nav-link">📋 Orders</a>
+                    <a href="/logout" class="nav-link">🚪 Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">🛒 Your Cart</h1>
+                <p class="page-subtitle">Review your selected books</p>
+            </div>
+
+            <div id="cart">
+                {{ if .cart.Items }}
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Cart Items ({{ len .cart.Items }} items)</h2>
+                        </div>
+                        {{ range .cart.Items }}
+                            <div class="cart-item">
+                                <div class="cart-item-image">
+                                    {{ if .Book.Image }}
+                                        <img 
+                                            src="{{ .Book.GetImageBase64 }}"
+                                            alt="Book cover" 
+                                            style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--border-radius);"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                        >
+                                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: var(--background-secondary); color: var(--text-secondary); border-radius: var(--border-radius);">
+                                            📚
+                                        </div>
+                                    {{ else }}
+                                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--background-secondary); color: var(--text-secondary); border-radius: var(--border-radius); font-size: 2rem;">
+                                            📚
+                                        </div>
+                                    {{ end }}
+                                </div>
+                                <div class="cart-item-content">
+                                    <h3 class="cart-item-title">{{ .Book.Title }}</h3>
+                                    <p class="cart-item-author">by {{ .Book.Author }}</p>
+                                    <p class="cart-item-price">${{ .Book.Price }}</p>
+                                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">Quantity: {{ .Quantity }}</p>
+                                </div>
+                                <div class="cart-item-actions">
+                                    <a href="/remove-from-cart/{{ .Book.ID }}" class="btn btn-danger btn-small">🗑️ Remove</a>
+                                    <a href="/order/{{ .Book.ID }}" class="btn btn-success btn-small">💳 Place Order</a>
+                                </div>
+                            </div>
+                        {{ end }}
+                    </div>
+                {{ else }}
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+                        <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">Your cart is empty</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Start shopping to add some amazing books to your cart!</p>
+                        <a href="/books" class="btn btn-primary">📖 Browse Books</a>
+                    </div>
                 {{ end }}
-            </ul>
-        {{ else }}
-            <p>Your cart is empty.</p>
-        {{ end }}
+            </div>
+        </div>
     </div>
 </body>
 </html>

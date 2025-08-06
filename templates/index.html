@@ -3,10 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Bookstore - Welcome</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <a href="/register">Register</a>
-    <a href="/login">Login</a>
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">📚 Welcome to Bookstore</h1>
+                <p class="page-subtitle">Discover your next favorite book</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Get Started</h2>
+                </div>
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 2rem; font-size: 1.1rem; color: var(--text-secondary);">
+                        Join our community of book lovers and start exploring our vast collection of books.
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="/register" class="btn btn-primary">Create Account</a>
+                        <a href="/login" class="btn btn-outline">Sign In</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="book-grid">
+                <div class="book-card">
+                    <div class="book-content">
+                        <h3 class="book-title">📖 Browse Books</h3>
+                        <p class="book-author">Explore our extensive collection of books across all genres</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-content">
+                        <h3 class="book-title">🛒 Shopping Cart</h3>
+                        <p class="book-author">Add books to your cart and manage your purchases</p>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <div class="book-content">
+                        <h3 class="book-title">⭐ Reviews</h3>
+                        <p class="book-author">Read and write reviews for your favorite books</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

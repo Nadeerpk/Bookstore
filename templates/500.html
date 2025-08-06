@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Internal Server Error</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Internal Server Error - Bookstore</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>500 - Internal Server Error</h1>
-    <p>Something went wrong on our end. Please try again later.</p>
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">⚠️ Oops!</h1>
+                <p class="page-subtitle">Something went wrong on our end</p>
+            </div>
+            
+            <div class="card" style="text-align: center; max-width: 600px; margin: 0 auto;">
+                <div style="font-size: 6rem; margin-bottom: 2rem;">🚨</div>
+                <h2 style="color: var(--accent-color); margin-bottom: 1rem;">500 - Internal Server Error</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.1rem;">
+                    We're experiencing some technical difficulties. Our team has been notified and is working to fix the issue.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/" class="btn btn-primary">🏠 Go Home</a>
+                    <a href="/books" class="btn btn-outline">📖 Browse Books</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

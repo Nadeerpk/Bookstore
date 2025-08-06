@@ -3,44 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-    </style>
+    <title>Orders - Bookstore</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <a href="/books">Books List</a>
-    <a href="/logout">Logout</a>
-    <h1>Orders</h1>
-    <table>
-        <tr>
-            <th>Order ID</th>
-            <th>Book Title</th>
-            <th>Author</th>
-            <th>Price</th>
-            <th>Order Date</th>
-        </tr>
-        {{ range $index, $order := .orders }}
-            <tr>
-                <td>{{ $index }}</td>
-                <td>{{ $order.Book.Title }}</td>
-                <td>{{ $order.Book.Author }}</td>
-                <td>${{ $order.Book.Price }}</td>
-                <td>{{ $order.CreatedAt }}</td>
-            </tr>
-        {{ end }}
-    </table>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="nav-brand">📚 Bookstore</a>
+                <div class="nav-links">
+                    <a href="/books" class="nav-link">📖 Books</a>
+                    <a href="/cart" class="nav-link">🛒 Cart</a>
+                    <a href="/logout" class="nav-link">🚪 Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">📋 Order History</h1>
+                <p class="page-subtitle">View your past orders</p>
+            </div>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Book Title</th>
+                            <th>Author</th>
+                            <th>Price</th>
+                            <th>Order Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{ range $index, $order := .orders }}
+                            <tr>
+                                <td><strong>#{{ $index }}</strong></td>
+                                <td>{{ $order.Book.Title }}</td>
+                                <td>{{ $order.Book.Author }}</td>
+                                <td><span style="color: var(--success-color); font-weight: 600;">${{ $order.Book.Price }}</span></td>
+                                <td>{{ $order.CreatedAt }}</td>
+                            </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
+
+            {{ if not .orders }}
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">📋</div>
+                <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">No orders yet</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Start shopping to see your order history here!</p>
+                <a href="/books" class="btn btn-primary">📖 Browse Books</a>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</body>
 </html>

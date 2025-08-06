@@ -3,22 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Categories - Bookstore</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .category-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-large);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-light);
+            transition: var(--transition);
+            border-left: 4px solid var(--secondary-color);
+        }
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+        .category-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Book Categories</h1>
-    <ul>
-        {{ range .categories }}
-            <li>
-                {{ .Name }}
-            </li>
-        {{ end }}
-    </ul>
-    <form action="/add-category" method="POST">
-        <label for="name">Category Name:</label>
-        <input type="text" id="name" name="name" required>
-        <button type="submit" class="add-button">Add Category</button>
-    </form>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="nav-brand">📚 Bookstore</a>
+                <div class="nav-links">
+                    <a href="/books" class="nav-link">📖 Books</a>
+                    <a href="/add-book" class="nav-link">➕ Add Book</a>
+                    <a href="/cart" class="nav-link">🛒 Cart</a>
+                    <a href="/logout" class="nav-link">🚪 Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">📂 Book Categories</h1>
+                <p class="page-subtitle">Manage book genres and categories</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Add New Category</h2>
+                </div>
+                <form action="/add-category" method="POST" class="form-container">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Category Name</label>
+                        <input type="text" id="name" name="name" class="form-input" required placeholder="Enter category name">
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-primary">➕ Add Category</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Existing Categories</h2>
+                </div>
+                {{ if .categories }}
+                    <div class="category-grid">
+                        {{ range .categories }}
+                            <div class="category-card">
+                                <h3 class="category-name">{{ .Name }}</h3>
+                            </div>
+                        {{ end }}
+                    </div>
+                {{ else }}
+                    <div style="text-align: center; padding: 2rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">📂</div>
+                        <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">No categories yet</h3>
+                        <p style="color: var(--text-secondary);">Add your first category above to get started!</p>
+                    </div>
+                {{ end }}
+            </div>
+        </div>
+    </div>
 </body>
 </html>

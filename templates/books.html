@@ -3,127 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book List</title>
+    <title>Books - Bookstore</title>
+    <link rel="stylesheet" href="/static/styles.css">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .availability-available {
+            background: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
         }
-        th, td {
-            padding: 15px;
-            text-align: left;
+        .availability-unavailable {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--accent-color);
         }
-        th {
-            background-color: #f2f2f2;
+        .availability-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .isbn-text {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .no-books-card {
+            text-align: center;
+        }
+        .no-books-title {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        .no-books-text {
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
-    {{if  .isadmin}}
-        <a href="/add-book">Add Book</a> 
-        <a href="/categories">Categories List</a>
-    {{ end}}
-    <a href="/cart">Cart</a>
-    <a href="/order-history">Orders</a>
-    <a href="/logout">Logout</a>
-    <h1>Book List</h1>
-    <form action="/book-search" method="get">
-        <div>
-            <label for="title">Title:</label>
-            <input type="text" id="title" name="title">
-            <select id="title_sort" name="title_sort">
-                <option value="asc">A-Z</option>
-                <option value="desc">Z-A</option>
-            </select>
-        </div>
-        <div>
-            <label for="author">Author:</label>
-            <input type="text" id="author" name="author">
-            <select id="author_sort" name="author_sort">
-                <option value="asc">A-Z</option>
-                <option value="desc">Z-A</option>
-            </select>
-        </div>
-        <div>
-            <label for="genre">Genre:</label>
-            <input type="text" id="genre" name="genre">
-        </div>
-        <div>
-            <label for="isbn">ISBN:</label>
-            <input type="text" id="isbn" name="isbn">
-        </div>
-        <div>
-            <label for="year_from">Year From:</label>
-            <input type="number" id="year_from" name="year_from" min="1800" max="2099">
-            <label for="year_to">Year To:</label>
-            <input type="number" id="year_to" name="year_to" min="1800" max="2099">
-            <select id="year_sort" name="year_sort">
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-        </div>
-        <select name="availability">
-            <option value="">Select Availability</option>
-            <option value="1">Available</option>
-            <option value="0">Not Available</option>
-        </select>
-        
-        <div>
-            <button type="submit">Search</button>
-        </div>
-    </form>
-    <table>
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Genre</th>
-                <th>ISBN</th>
-                <th>Availability</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{ range .books }}
-            <tr>
-                <td>
-                    {{ if .Image }}
-                        <img 
-                            src="{{ .GetImageBase64 }}"
-                            alt="Book cover" 
-                            style="max-width: 100px; max-height: 100px;"
-                            onerror="console.error(this.src)"
-                        >
-                    {{ else }}
-                        <span>No image</span>
-                    {{ end }}
-                </td>
-                <td>{{ .Title }}</td>
-                <td>{{ .Author }}</td>
-                <td>{{ .Category.Name }}</td>
-                <td>{{ .Isbn }}</td>
-                <td>{{ if .Availability }}Available{{ else }}Not Available{{ end }}</td>
-                <td>
-                    {{ if $.isadmin}}
-                        <a href="/edit-book/{{ .ID }}">Edit</a>
-                        <form action="/delete-book/{{ .ID }}" method="post" style="display:inline;">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit">Delete</button>
-                        </form>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="nav-brand">📚 Bookstore</a>
+                <div class="nav-links">
+                    {{if .isadmin}}
+                        <a href="/add-book" class="nav-link">➕ Add Book</a>
+                        <a href="/categories" class="nav-link">📂 Categories</a>
                     {{ end}}
-                    <form action="/add-to-cart/{{ .ID }}" method="post" style="display:inline;">
-                        <input type="hidden" name="_method" value="ADD">
-                        <button type="submit">Add To Cart</button>
-                    </form>
-                    <a href="/reviews/{{ .ID }}">Reviews</a>
-                </td>
-            </tr>
+                    <a href="/cart" class="nav-link">🛒 Cart</a>
+                    <a href="/order-history" class="nav-link">📋 Orders</a>
+                    <a href="/logout" class="nav-link">🚪 Logout</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">📖 Book Collection</h1>
+                <p class="page-subtitle">Discover amazing books from our library</p>
+            </div>
+
+            <div class="search-form">
+                <h3 style="margin-bottom: 1.5rem; color: var(--primary-color);">🔍 Search & Filter</h3>
+                <form action="/book-search" method="get">
+                    <div class="search-grid">
+                        <div class="search-group">
+                            <label for="title" class="search-label">Title</label>
+                            <input type="text" id="title" name="title" class="search-input" placeholder="Search by title">
+                            <select id="title_sort" name="title_sort" class="search-select">
+                                <option value="asc">A-Z</option>
+                                <option value="desc">Z-A</option>
+                            </select>
+                        </div>
+                        <div class="search-group">
+                            <label for="author" class="search-label">Author</label>
+                            <input type="text" id="author" name="author" class="search-input" placeholder="Search by author">
+                            <select id="author_sort" name="author_sort" class="search-select">
+                                <option value="asc">A-Z</option>
+                                <option value="desc">Z-A</option>
+                            </select>
+                        </div>
+                        <div class="search-group">
+                            <label for="genre" class="search-label">Genre</label>
+                            <input type="text" id="genre" name="genre" class="search-input" placeholder="Search by genre">
+                        </div>
+                        <div class="search-group">
+                            <label for="isbn" class="search-label">ISBN</label>
+                            <input type="text" id="isbn" name="isbn" class="search-input" placeholder="Search by ISBN">
+                        </div>
+                        <div class="search-group">
+                            <label for="year_from" class="search-label">Year From</label>
+                            <input type="number" id="year_from" name="year_from" class="search-input" min="1800" max="2099" placeholder="1800">
+                        </div>
+                        <div class="search-group">
+                            <label for="year_to" class="search-label">Year To</label>
+                            <input type="number" id="year_to" name="year_to" class="search-input" min="1800" max="2099" placeholder="2024">
+                            <select id="year_sort" name="year_sort" class="search-select">
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
+                        <div class="search-group">
+                            <label for="availability" class="search-label">Availability</label>
+                            <select name="availability" id="availability" class="search-select">
+                                <option value="">All Books</option>
+                                <option value="1">Available</option>
+                                <option value="0">Not Available</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn btn-primary">🔍 Search Books</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="book-grid">
+                {{ range .books }}
+                <div class="book-card">
+                    <div class="book-image">
+                        {{ if .Image }}
+                            <img 
+                                src="{{ .GetImageBase64 }}"
+                                alt="Book cover" 
+                                style="width: 100%; height: 100%; object-fit: cover;"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                            >
+                            <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: var(--background-secondary); color: var(--text-secondary);">
+                                📚
+                            </div>
+                        {{ else }}
+                            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--background-secondary); color: var(--text-secondary); font-size: 3rem;">
+                                📚
+                            </div>
+                        {{ end }}
+                    </div>
+                    <div class="book-content">
+                        <h3 class="book-title">{{ .Title }}</h3>
+                        <p class="book-author">by {{ .Author }}</p>
+                        <p class="book-genre">{{ .Category.Name }}</p>
+                        <p class="isbn-text">ISBN: {{ .Isbn }}</p>
+                        <p style="margin-bottom: 1rem;">
+                            <span class="availability-badge {{ if .Availability }}availability-available{{ else }}availability-unavailable{{ end }}">
+                                {{ if .Availability }}✅ Available{{ else }}❌ Not Available{{ end }}
+                            </span>
+                        </p>
+                        <div class="book-actions">
+                            {{ if $.isadmin}}
+                                <a href="/edit-book/{{ .ID }}" class="btn btn-warning btn-small">✏️ Edit</a>
+                                <form action="/delete-book/{{ .ID }}" method="post" style="display:inline;">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-danger btn-small" onclick="return confirm('Are you sure you want to delete this book?')">🗑️ Delete</button>
+                                </form>
+                            {{ end}}
+                            <form action="/add-to-cart/{{ .ID }}" method="post" style="display:inline;">
+                                <input type="hidden" name="_method" value="ADD">
+                                <button type="submit" class="btn btn-success btn-small">🛒 Add to Cart</button>
+                            </form>
+                            <a href="/reviews/{{ .ID }}" class="btn btn-outline btn-small">⭐ Reviews</a>
+                        </div>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+
+            {{ if not .books }}
+            <div class="card no-books-card">
+                <h3 class="no-books-title">No books found</h3>
+                <p class="no-books-text">Try adjusting your search criteria or browse all books.</p>
+            </div>
             {{ end }}
-        </tbody>
-    </table>
+        </div>
+    </div>
 </body>
 </html>

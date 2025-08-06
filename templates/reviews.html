@@ -3,27 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Reviews</title>
+    <title>Reviews - Bookstore</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .review-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-large);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-light);
+            border-left: 4px solid var(--secondary-color);
+        }
+        .review-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        .reviewer-name {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .review-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-large);
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow-medium);
+        }
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <h1>Book Reviews</h1>
-
-    <div id="reviews">
-        {{ range .reviews }}
-        <div class="review">
-            <p>{{ .Comment }}</p>
-            <p><strong>Reviewer:</strong> {{ .User.Name }}</p>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="/" class="nav-brand">📚 Bookstore</a>
+                <div class="nav-links">
+                    <a href="/books" class="nav-link">📖 Books</a>
+                    <a href="/cart" class="nav-link">🛒 Cart</a>
+                    <a href="/order-history" class="nav-link">📋 Orders</a>
+                    <a href="/logout" class="nav-link">🚪 Logout</a>
+                </div>
+            </nav>
         </div>
-        {{ end }}
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">⭐ Book Reviews</h1>
+                <p class="page-subtitle">Read and share your thoughts</p>
+            </div>
+
+            <div id="reviews">
+                {{ if .reviews }}
+                    {{ range .reviews }}
+                    <div class="review-card">
+                        <p class="review-text">"{{ .Comment }}"</p>
+                        <p class="reviewer-name">— {{ .User.Name }}</p>
+                    </div>
+                    {{ end }}
+                {{ else }}
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">⭐</div>
+                        <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">No reviews yet</h3>
+                        <p style="color: var(--text-secondary);">Be the first to share your thoughts about this book!</p>
+                    </div>
+                {{ end }}
+            </div>
+
+            <div class="review-form">
+                <h2 style="margin-bottom: 1.5rem; color: var(--primary-color);">📝 Add Your Review</h2>
+                <form action="/add-review/{{ .book_id }}" method="post">
+                    <div class="form-group">
+                        <label for="comment" class="form-label">Your Review</label>
+                        <textarea id="comment" name="comment" class="form-textarea" rows="4" required placeholder="Share your thoughts about this book..."></textarea>
+                    </div>
+                    <div style="text-align: center; margin-top: 1.5rem;">
+                        <button type="submit" class="btn btn-primary">⭐ Submit Review</button>
+                        <a href="/books" class="btn btn-outline" style="margin-left: 1rem;">📖 Back to Books</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <h2>Add a Review</h2>
-    <form action="/add-review/{{ .book_id }}" method="post">
-
-        <label for="comment">Review:</label>
-        <textarea id="comment" name="comment" rows="4" required></textarea><br><br>
-
-        <input type="submit" value="Submit Review">
-    </form>
 </body>
 </html>

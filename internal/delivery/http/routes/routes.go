@@ -18,6 +18,7 @@ func SetupRoutes(db *gorm.DB, userHandler *handlers.UserHandler, bookHandler *ha
 	reviewHandler *handlers.ReviewHandler, categoryHandler *handlers.CategoryHandler) *gin.Engine {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
+	router.Static("/static", "./static")
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(200, "index.html", gin.H{})
 	})
